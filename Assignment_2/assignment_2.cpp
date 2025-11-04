@@ -140,7 +140,76 @@ struct InvalidTimeException
 */
 Sailing parse_sailing(std::string const &input_line)
 {
-    /* Your Code Here */
+    if(count_comma(input_line) != 10)
+    {
+        IncompleteLineException e;
+        e.num_fields = input_line.count(',') + 1;
+        throw e;
+    } else if(isempty(input_line)) {
+        EmptyFieldException e;
+        e.which_field = /* index of first empty field */;
+        throw e;
+    } else if(numeric_check()) {
+        NonNumericDataException e;
+        e.bad_field = /* text of first bad field */;
+        throw e;
+    } else if(/* Check for invalid time */) {
+        InvalidTimeException e;
+        e.bad_time = /* invalid TimeOfDay object */;
+        throw e;
+    }
+    int route_number = 0;
+    std::string source{};
+    std::string destination{};
+    std::string name{};
+    int day = 0;
+    int month = 0;
+    int year = 0;
+    int hour = 0;
+    int minutes = 0;
+    int expect = 0;
+    int actual = 0;
+
+
+    for(int i = 0; i < input_line.size(); i++)
+    {
+        int j = 0;
+        route_number = input_line[] 
+        if(input_line[i] == ",")
+        {
+            input_line{}
+            j = i;
+        }
+// 1,Swartz Bay,Tsawwassen,2022,6,10,7,0,Spirit of Vancouver Island,95,94
+
+
+    }
+    Sailing New_voyage{};
+    int route_number{0};
+    std::string source_terminal{""};
+    std::string dest_terminal{""};
+    std::string vessel_name{""};
+
+    Date departure_date{};
+    TimeOfDay scheduled_departure_time{};
+
+    int expected_duration{0};
+    int actual_duration{0};
+    
+    
+}
+
+void count_comma(std::string const &input_line)
+{
+    int comma_count{0};
+    for(char c : input_line)
+    {
+        if(c == ',')
+        {
+            comma_count++;
+        }
+    }
+    return comma_count;
 }
 
 /* performance_by_route(sailings)
