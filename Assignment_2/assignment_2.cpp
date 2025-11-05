@@ -145,6 +145,8 @@ struct InvalidTimeException
 // Helper functions 
 std::vector<std::string> get_string(std::string const &input_line)
 {
+    std::cout << "get_string()::" << std::endl << std::endl;
+
     std::string str = input_line;
     std::vector<std::string> v;
 
@@ -160,6 +162,8 @@ std::vector<std::string> get_string(std::string const &input_line)
 }
 int count_comma(std::string const &input_line)
 {
+    std::cout << "count_comma()::" << std::endl << std::endl;
+
     int comma_count{0};
     for(char c : input_line)
     {
@@ -173,6 +177,8 @@ int count_comma(std::string const &input_line)
 
 int isempty(std::string const &input_line)
 {
+    std::cout << "isempty()::" << std::endl << std::endl;
+
     int index_flag = 99;
     std::vector<std::string> v = get_string(input_line);
     for(size_t i = 0; i < v.size(); i++)
@@ -197,6 +203,8 @@ int isempty(std::string const &input_line)
 
 std::string numeric_check(std::string const &input_line)
 {
+    std::cout << "numeric_check()::" << std::endl << std::endl;
+
     
     std::string non_numeric_text = "";
     std::vector<std::string> v = get_string(input_line);
@@ -221,10 +229,14 @@ std::string numeric_check(std::string const &input_line)
 
 void time_checker(std::string const &input_line, std::vector<std::string> &time_storer)
 {
-    
+    std::cout << "time_checker()::" << std::endl << std::endl;
+
     std::vector<std::string> v = get_string(input_line);
+    std::cout << "input line = " << input_line << std::endl;
     int hour = std::stoi(v[6]);
+    std::cout << "hour = " << hour << std::endl;
     int minute = std::stoi(v[7]);
+    std::cout << "minute = " << minute << std::endl;
 
     if(hour < 0 || hour > 23)
     {
@@ -239,6 +251,8 @@ void time_checker(std::string const &input_line, std::vector<std::string> &time_
 
 Sailing parse_sailing(std::string const &input_line)
 {
+    std::cout << "parse_sailing()::" << std::endl << std::endl;
+
     int route_number = 0;
     std::string source{};
     std::string destination{};
@@ -354,6 +368,10 @@ Sailing parse_sailing(std::string const &input_line)
 std::vector<RouteStatistics> performance_by_route(std::vector<Sailing> const &sailings)
 {
     /* Your Code Here */
+    std::cout << "performance_by_route()::" << std::endl << std::endl;
+
+    std::vector<RouteStatistics> rs;
+    return rs;
 }
 
 /* best_days(sailings)
@@ -382,7 +400,13 @@ std::vector<RouteStatistics> performance_by_route(std::vector<Sailing> const &sa
 std::vector<DayStatistics> best_days(std::vector<Sailing> const &sailings)
 {
     /* Your Code Here */
+    std::cout << "best_days()::" << std::endl << std::endl;
+
+    std::vector<DayStatistics> ds;
+
+    return ds;
 }
+
 
 /* worst_days(sailings)
    See the description of best_days().
@@ -406,12 +430,19 @@ std::vector<DayStatistics> best_days(std::vector<Sailing> const &sailings)
 std::vector<DayStatistics> worst_days(std::vector<Sailing> const &sailings)
 {
     /* Your Code Here */
+    std::cout << "worst_days()::" << std::endl;
+
+    std::vector<DayStatistics> ws;
+
+    return ws;
 }
 
 /* You do not have to understand or modify these functions (although they
    are of the same level of difficulty as the other parts of the assignment) */
 std::vector<Sailing> read_sailings(std::string const &input_filename)
 {
+    std::cout << "read_sailings()::" << std::endl << std::endl;
+
     std::vector<Sailing> all_sailings;
     std::ifstream input_file;
     input_file.open(input_filename);
@@ -466,6 +497,8 @@ std::vector<Sailing> read_sailings(std::string const &input_filename)
 
 void print_sailing(Sailing const &sailing)
 {
+    std::cout << "print_sailing()::" << std::endl << std::endl;
+
     std::cout << "Route " << sailing.route_number;
     std::cout << " (" << sailing.source_terminal << " -> " << sailing.dest_terminal << "): ";
     std::cout << sailing.departure_date.year << "-";
@@ -479,22 +512,24 @@ void print_sailing(Sailing const &sailing)
 
 int main(int argc, char **argv)
 {
-    // if (argc < 3)
-    // {
-    //     std::cout << "Usage: ./assignment_2 action input_filename" << std::endl;
-    //     std::cout << "       where action is either 'route_summary' or 'days'" << std::endl;
-    //     return 1;
-    // }
+    std::cout << "main()::" << std::endl << std::endl;
 
-    // std::string action{argv[1]};
-    // std::string input_filename{argv[2]};
+    if (argc < 3)
+    {
+        std::cout << "Usage: ./assignment_2 action input_filename" << std::endl;
+        std::cout << "       where action is either 'route_summary' or 'days'" << std::endl;
+        return 1;
+    }
 
-    // auto all_sailings{read_sailings(input_filename)};
+    std::string action{argv[1]};
+    std::string input_filename{argv[2]};
 
-    //temporary hardcoded values for testing
-    auto all_sailings{read_sailings("01_June10_morning_Route1.txt")};
-    std::string action{"route_summary"};
-    std::string input_filename{"01_June10_morning_Route1.txt"};
+    auto all_sailings{read_sailings(input_filename)};
+
+    // //temporary hardcoded values for testing
+    // auto all_sailings{read_sailings("01_June10_morning_Route1.txt")};
+    // std::string action{"route_summary"};
+    // std::string input_filename{"01_June10_morning_Route1.txt"};
 
     if (action == "route_summary")
     {
