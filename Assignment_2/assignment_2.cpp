@@ -145,7 +145,7 @@ struct InvalidTimeException
 // Helper functions 
 std::vector<std::string> get_string(std::string const &input_line)
 {
-    std::cout << "get_string()::" << std::endl << std::endl;
+    // std::cout << "get_string()::" << std::endl << std::endl;
 
     std::string str = input_line;
     std::vector<std::string> v;
@@ -162,7 +162,7 @@ std::vector<std::string> get_string(std::string const &input_line)
 }
 int count_comma(std::string const &input_line)
 {
-    std::cout << "count_comma()::" << std::endl << std::endl;
+    // std::cout << "count_comma()::" << std::endl << std::endl;
 
     int comma_count{0};
     for(char c : input_line)
@@ -177,7 +177,7 @@ int count_comma(std::string const &input_line)
 
 int isempty(std::string const &input_line)
 {
-    std::cout << "isempty()::" << std::endl << std::endl;
+    // std::cout << "isempty()::" << std::endl << std::endl;
 
     int index_flag = 99;
     std::vector<std::string> v = get_string(input_line);
@@ -186,7 +186,7 @@ int isempty(std::string const &input_line)
         bool all_space = true;
         for(char c : v[i])
         {
-            if(!std::isspace(c))
+            if(std::isspace(c))
             {
                 all_space = false;
                 index_flag = i;
@@ -203,7 +203,7 @@ int isempty(std::string const &input_line)
 
 std::string numeric_check(std::string const &input_line)
 {
-    std::cout << "numeric_check()::" << std::endl << std::endl;
+    // std::cout << "numeric_check()::" << std::endl << std::endl;
 
     
     std::string non_numeric_text = "";
@@ -229,7 +229,7 @@ std::string numeric_check(std::string const &input_line)
 
 void time_checker(std::string const &input_line, std::vector<std::string> &time_storer)
 {
-    std::cout << "time_checker()::" << std::endl << std::endl;
+    // std::cout << "time_checker()::" << std::endl << std::endl;
 
     std::vector<std::string> v = get_string(input_line);
     std::cout << "input line = " << input_line << std::endl;
@@ -251,7 +251,7 @@ void time_checker(std::string const &input_line, std::vector<std::string> &time_
 
 Sailing parse_sailing(std::string const &input_line)
 {
-    std::cout << "parse_sailing()::" << std::endl << std::endl;
+    // std::cout << "parse_sailing()::" << std::endl << std::endl;
 
     int route_number = 0;
     std::string source{};
