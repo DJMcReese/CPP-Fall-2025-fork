@@ -1,10 +1,13 @@
 #include <vector>
 #include <iostream>
 #include <string>
-#include <cctype>    //For std::isspace
+#include <cctype>    //For std::isspace std::ispunct
 #include <fstream>   //Needed by read_sailings to work with files
 #include <stdexcept> //Needed by read_sailings to handle exceptions
 #include <iomanip>   //Needed by print_sailing to format output
+
+#include <sstream>   //Needed to parse strings
+
 
 /* A structure type to represent a year/month/day combination */
 struct Date
@@ -138,26 +141,104 @@ struct InvalidTimeException
            involved in this function, rather than putting all of the code
            in one place.
 */
+
+// Helper functions 
+std::vector<std::string> get_string(std::string const &input_line)
+{
+    std::string str = input_line;
+    std::vector<std::string> v;
+
+    std::stringstream ss(str);
+
+    while (ss.good()) {
+        std::string substr;
+        getline(ss, substr, ',');
+        v.push_back(substr);
+    }
+
+    return v;
+}
+int count_comma(std::string const &input_line)
+{
+    int comma_count{0};
+    for(char c : input_line)
+    {
+        if(c == ',')
+        {
+            comma_count++;
+        }
+    }
+    return comma_count;
+}
+
+int isempty(std::string const &input_line)
+{
+    int index_flag = 99;
+    std::vector<std::string> v = get_string(input_line);
+    for(size_t i = 0; i < v.size(); i++)
+    {
+        bool all_space = true;
+        for(char c : v[i])
+        {
+            if(!std::isspace(c))
+            {
+                all_space = false;
+                index_flag = i;
+                break;
+            }
+        }
+        if(all_space)
+        {
+            return index_flag;
+        }
+    }
+    return index_flag;
+}
+
+std::string numeric_check(std::string const &input_line)
+{
+    
+    std::string non_numeric_text = "";
+    std::vector<std::string> v = get_string(input_line);
+    std::vector<int> numeric_indices = {0, 3, 4, 5, 6, 7, 9, 10};
+
+    for (auto index : numeric_indices)
+    {
+        std::string field = v[index];
+        if(field.empty())
+        {
+            continue; // Empty fields are handled in isempty function
+        }
+        if(!std::isdigit(field[0]))
+        {
+            non_numeric_text = field;
+            break;
+        }
+    }
+
+    return non_numeric_text;
+}   
+
+void time_checker(std::string const &input_line, std::vector<std::string> &time_storer)
+{
+    
+    std::vector<std::string> v = get_string(input_line);
+    int hour = std::stoi(v[6]);
+    int minute = std::stoi(v[7]);
+
+    if(hour < 0 || hour > 23)
+    {
+        time_storer.push_back(v[6]);
+    }
+    if(minute < 0 || minute > 59)
+    {
+        time_storer.push_back(v[7]);
+    }
+
+}
+
 Sailing parse_sailing(std::string const &input_line)
 {
-    if(count_comma(input_line) != 10)
-    {
-        IncompleteLineException e;
-        e.num_fields = input_line.count(',') + 1;
-        throw e;
-    } else if(isempty(input_line)) {
-        EmptyFieldException e;
-        e.which_field = /* index of first empty field */;
-        throw e;
-    } else if(numeric_check()) {
-        NonNumericDataException e;
-        e.bad_field = /* text of first bad field */;
-        throw e;
-    } else if(/* Check for invalid time */) {
-        InvalidTimeException e;
-        e.bad_time = /* invalid TimeOfDay object */;
-        throw e;
-    }
     int route_number = 0;
     std::string source{};
     std::string destination{};
@@ -170,47 +251,82 @@ Sailing parse_sailing(std::string const &input_line)
     int expect = 0;
     int actual = 0;
 
+    int comas = count_comma(input_line);
+    std::vector<std::string> time_check{};
+    time_checker(input_line, time_check);
 
-    for(int i = 0; i < input_line.size(); i++)
+    if(comas != 10)
     {
-        int j = 0;
-        route_number = input_line[] 
-        if(input_line[i] == ",")
-        {
-            input_line{}
-            j = i;
-        }
-// 1,Swartz Bay,Tsawwassen,2022,6,10,7,0,Spirit of Vancouver Island,95,94
-
-
+        IncompleteLineException e;
+        e.num_fields = comas + 1;
+        throw e;
+    } else if(isempty(input_line) != 99) {
+        EmptyFieldException e;
+        e.which_field = isempty(input_line);
+        throw e;
+    } else if(numeric_check(input_line).empty() == false) {
+        NonNumericDataException e;
+        e.bad_field = numeric_check(input_line);
+        throw e;
+    } else if(time_check.size() > 0) {
+        TimeOfDay bad_time{std::stoi(time_check[0]), std::stoi(time_check[1])};
+        InvalidTimeException e;
+        e.bad_time = bad_time;
+        throw e;
     }
-    Sailing New_voyage{};
-    int route_number{0};
-    std::string source_terminal{""};
-    std::string dest_terminal{""};
-    std::string vessel_name{""};
+    
 
-    Date departure_date{};
-    TimeOfDay scheduled_departure_time{};
+    std::vector<std::string> v = get_string(input_line);
 
-    int expected_duration{0};
-    int actual_duration{0};
+    route_number = std::stoi(v[0]);
+    source = v[1];
+    destination = v[2];
+    name = v[8];
+    day = std::stoi(v[5]);
+    month = std::stoi(v[4]);
+    year = std::stoi(v[3]);
+    hour = std::stoi(v[6]);
+    minutes = std::stoi(v[7]);
+    expect = std::stoi(v[9]);
+    actual = std::stoi(v[10]);
+    
+    Date new_date{day, month, year};
+    TimeOfDay new_time{hour, minutes};
+        
+    Sailing New_voyage{route_number, source, destination, name, new_date, new_time, expect, actual};
+
+    return New_voyage;
+}
+    //Example line:
+    // 1,Swartz Bay,Tsawwassen,2022,6,10,7,0,Spirit of Vancouver Island,95,94
+
+
+//     Sailing New_voyage{route_number, source, destintion,};
+//     int route_number{0};
+//     std::string source_terminal{""};
+//     std::string dest_terminal{""};
+//     std::string vessel_name{""};
+
+//     Date departure_date{};
+//     TimeOfDay scheduled_departure_time{};
+
+//     int expected_duration{0};
+//     int actual_duration{0};
     
     
-}
 
-void count_comma(std::string const &input_line)
-{
-    int comma_count{0};
-    for(char c : input_line)
-    {
-        if(c == ',')
-        {
-            comma_count++;
-        }
-    }
-    return comma_count;
-}
+// int count_comma(std::string const &input_line)
+// {
+//     int comma_count{0};
+//     for(char c : input_line)
+//     {
+//         if(c == ',')
+//         {
+//             comma_count++;
+//         }
+//     }
+//     return comma_count;
+// }
 
 /* performance_by_route(sailings)
    Given a vector of Sailing instances (in no particular order), return
@@ -363,17 +479,22 @@ void print_sailing(Sailing const &sailing)
 
 int main(int argc, char **argv)
 {
-    if (argc < 3)
-    {
-        std::cout << "Usage: ./assignment_2 action input_filename" << std::endl;
-        std::cout << "       where action is either 'route_summary' or 'days'" << std::endl;
-        return 1;
-    }
+    // if (argc < 3)
+    // {
+    //     std::cout << "Usage: ./assignment_2 action input_filename" << std::endl;
+    //     std::cout << "       where action is either 'route_summary' or 'days'" << std::endl;
+    //     return 1;
+    // }
 
-    std::string action{argv[1]};
-    std::string input_filename{argv[2]};
+    // std::string action{argv[1]};
+    // std::string input_filename{argv[2]};
 
-    auto all_sailings{read_sailings(input_filename)};
+    // auto all_sailings{read_sailings(input_filename)};
+
+    //temporary hardcoded values for testing
+    auto all_sailings{read_sailings("01_June10_morning_Route1.txt")};
+    std::string action{"route_summary"};
+    std::string input_filename{"01_June10_morning_Route1.txt"};
 
     if (action == "route_summary")
     {
