@@ -7,7 +7,7 @@
 #include <iomanip>   //Needed by print_sailing to format output
 
 #include <sstream>   //Needed to parse strings
-
+#include <algorithm> // find_if
 
 /* A structure type to represent a year/month/day combination */
 struct Date
