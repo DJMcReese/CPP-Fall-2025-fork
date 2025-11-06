@@ -172,6 +172,7 @@ int count_comma(std::string const &input_line)
             comma_count++;
         }
     }
+    // std::cout << "comma_count = " << comma_count << std::endl;
     return comma_count;
 }
 
@@ -186,7 +187,7 @@ int isempty(std::string const &input_line)
         bool all_space = true;
         for(char c : v[i])
         {
-            if(std::isspace(c))
+            if(!(std::isspace(static_cast<unsigned char>(c))))
             {
                 all_space = false;
                 index_flag = i;
@@ -195,10 +196,10 @@ int isempty(std::string const &input_line)
         }
         if(all_space)
         {
-            return index_flag;
+            return static_cast<int>(i);
         }
     }
-    return index_flag;
+    return 99;
 }
 
 std::string numeric_check(std::string const &input_line)
@@ -217,7 +218,18 @@ std::string numeric_check(std::string const &input_line)
         {
             continue; // Empty fields are handled in isempty function
         }
-        if(!std::isdigit(field[0]))
+        //check for + or - sign at start
+        int pos = 0;
+        if(field[0] == '+' || field[0] == '-')
+        {
+            if(field.size() == 1)
+            {
+                non_numeric_text = field;
+                break;
+            }
+            pos = 1;
+        }
+        if(!std::isdigit(field[pos]))
         {
             non_numeric_text = field;
             break;
@@ -227,26 +239,51 @@ std::string numeric_check(std::string const &input_line)
     return non_numeric_text;
 }   
 
-void time_checker(std::string const &input_line, std::vector<std::string> &time_storer)
+int time_check_if(std::string const &input_line)
 {
-    // std::cout << "time_checker()::" << std::endl << std::endl;
 
+    //std::cout << "time_check_if()::" << std::endl << std::endl;
+    NonNumericDataException e;
+    TimeOfDay time_catch{};
     std::vector<std::string> v = get_string(input_line);
+
+    //std::cout << "0000" << std::endl; 
+    //if (v.size() <= 7) return time_catch;
+    try
+    {
+        int hour = std::stoi(v[6]);
+        int minute = std::stoi(v[7]);
+        if(hour < 0 || hour > 23 || minute < 0 || minute > 59)
+        {
+            return 0;
+        }
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+    
     // std::cout << "input line = " << input_line << std::endl;
-    int hour = std::stoi(v[6]);
     // std::cout << "hour = " << hour << std::endl;
-    int minute = std::stoi(v[7]);
     // std::cout << "minute = " << minute << std::endl;
 
-    if(hour < 0 || hour > 23)
-    {
-        time_storer.push_back(v[6]);
-    }
-    if(minute < 0 || minute > 59)
-    {
-        time_storer.push_back(v[7]);
-    }
+    return 1;
+}
 
+TimeOfDay time_check_return(std::string const &input_line)
+{
+    // std::cout << "time_check_r()::" << std::endl << std::endl;
+
+    TimeOfDay time_catch{};
+    std::vector<std::string> v = get_string(input_line);
+
+    int hour = std::stoi(v[6]);
+    int minute = std::stoi(v[7]);
+
+    time_catch.hour = hour;
+    time_catch.minute = minute;
+
+    return time_catch;
 }
 
 Sailing parse_sailing(std::string const &input_line)
@@ -266,8 +303,7 @@ Sailing parse_sailing(std::string const &input_line)
     int actual = 0;
 
     int comas = count_comma(input_line);
-    std::vector<std::string> time_check{};
-    time_checker(input_line, time_check);
+
 
     if(comas != 10)
     {
@@ -278,19 +314,29 @@ Sailing parse_sailing(std::string const &input_line)
         EmptyFieldException e;
         e.which_field = isempty(input_line);
         throw e;
-    } else if(numeric_check(input_line).empty() == false) {
-        NonNumericDataException e;
-        e.bad_field = numeric_check(input_line);
-        throw e;
-    } else if(time_check.size() > 0) {
-        TimeOfDay bad_time{std::stoi(time_check[0]), std::stoi(time_check[1])};
-        InvalidTimeException e;
-        e.bad_time = bad_time;
-        throw e;
+    } else
+     { 
+        // 3) numeric fields check
+        std::string bad_field = numeric_check(input_line);
+        if (!bad_field.empty())
+        {
+            NonNumericDataException e;
+            e.bad_field = bad_field;
+            throw e;
+        }
+
+        if(time_check_if(input_line) == 0)
+        {
+            InvalidTimeException e;
+            e.bad_time = time_check_return(input_line);
+            throw e;
+        }
     }
     
 
     std::vector<std::string> v = get_string(input_line);
+
+    // std::cout << "Here" << std::endl;
 
     route_number = std::stoi(v[0]);
     source = v[1];
@@ -666,7 +712,7 @@ void print_sailing(Sailing const &sailing)
 
 int main(int argc, char **argv)
 {
-    std::cout << "main()::" << std::endl << std::endl;
+    // std::cout << "main()::" << std::endl << std::endl;
 
     if (argc < 3)
     {
@@ -690,7 +736,7 @@ int main(int argc, char **argv)
         std::cout << "Performance by route:" << std::endl;
         auto statistics{performance_by_route(all_sailings)};
 
-        std::cout << "Performance by route ended::" << std::endl;
+        // std::cout << "Performance by route ended::" << std::endl;
 
         for (auto stats : statistics)
         {
