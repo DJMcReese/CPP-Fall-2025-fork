@@ -232,11 +232,11 @@ void time_checker(std::string const &input_line, std::vector<std::string> &time_
     // std::cout << "time_checker()::" << std::endl << std::endl;
 
     std::vector<std::string> v = get_string(input_line);
-    std::cout << "input line = " << input_line << std::endl;
+    // std::cout << "input line = " << input_line << std::endl;
     int hour = std::stoi(v[6]);
-    std::cout << "hour = " << hour << std::endl;
+    // std::cout << "hour = " << hour << std::endl;
     int minute = std::stoi(v[7]);
-    std::cout << "minute = " << minute << std::endl;
+    // std::cout << "minute = " << minute << std::endl;
 
     if(hour < 0 || hour > 23)
     {
@@ -368,7 +368,7 @@ Sailing parse_sailing(std::string const &input_line)
 std::vector<RouteStatistics> performance_by_route(std::vector<Sailing> const &sailings)
 {
     /* Your Code Here */
-    std::cout << "performance_by_route()::" << std::endl << std::endl;
+    // std::cout << "performance_by_route()::" << std::endl << std::endl;
 
     std::vector<RouteStatistics> rs;
 
@@ -445,7 +445,7 @@ std::vector<DayStatistics> best_days(std::vector<Sailing> const &sailings)
 
     for (auto const &s : sailings)
     {
-        std::cout << "for::" << std::endl;
+        //std::cout << "for::" << std::endl;
 
         auto it = std::find_if(bs.begin(), bs.end(), [&](DayStatistics const &d) 
                                 {return d.date.year  == s.departure_date.year &&
@@ -453,11 +453,11 @@ std::vector<DayStatistics> best_days(std::vector<Sailing> const &sailings)
                                         d.date.day   == s.departure_date.day;
                                 });
 
-        std::cout << "it::" << std::endl;
+        //std::cout << "it::" << std::endl;
 
         if (it == bs.end())
         {
-            std::cout << "if::" << std::endl;
+            //std::cout << "if::" << std::endl;
 
             DayStatistics new_day;
             new_day.date = s.departure_date;
@@ -467,7 +467,7 @@ std::vector<DayStatistics> best_days(std::vector<Sailing> const &sailings)
             
         } else
         {
-            std::cout << "for::" << std::endl;
+            // std::cout << "for::" << std::endl;
             it->total_sailings++;
             if (s.actual_duration >= s.expected_duration + 5) 
             {
@@ -476,9 +476,21 @@ std::vector<DayStatistics> best_days(std::vector<Sailing> const &sailings)
         }
         if (bs.empty()) return {};
 
-        
-
     }
+
+    //continue
+    auto less_best = []( const auto &e1, const auto &e2 )
+    {
+        return (e1.late_sailings/e1.total_sailings < e2.late_sailings/e2.total_sailings);
+    };
+
+    auto min = std::min_element( std::begin(bs),
+        std::end(bs),
+        less_best );
+
+    std::cout << std::distance( std::begin(bs), min ) << '\n';
+
+
     return bs;
 }
 
@@ -548,7 +560,7 @@ std::vector<DayStatistics> worst_days(std::vector<Sailing> const &sailings)
    are of the same level of difficulty as the other parts of the assignment) */
 std::vector<Sailing> read_sailings(std::string const &input_filename)
 {
-    std::cout << "read_sailings()::" << std::endl << std::endl;
+    // std::cout << "read_sailings()::" << std::endl << std::endl;
 
     std::vector<Sailing> all_sailings;
     std::ifstream input_file;
@@ -604,7 +616,7 @@ std::vector<Sailing> read_sailings(std::string const &input_filename)
 
 void print_sailing(Sailing const &sailing)
 {
-    std::cout << "print_sailing()::" << std::endl << std::endl;
+    // std::cout << "print_sailing()::" << std::endl << std::endl;
 
     std::cout << "Route " << sailing.route_number;
     std::cout << " (" << sailing.source_terminal << " -> " << sailing.dest_terminal << "): ";
@@ -661,11 +673,11 @@ int main(int argc, char **argv)
             std::cout << stats.total_sailings << " sailings (" << stats.late_sailings << " late)" << std::endl;
         }
         std::cout << "Worst days:" << std::endl;
-        for (auto stats : worst)
-        {
-            std::cout << stats.date.year << "-" << stats.date.month << "-" << stats.date.day << ": ";
-            std::cout << stats.total_sailings << " sailings (" << stats.late_sailings << " late)" << std::endl;
-        }
+        // for (auto stats : worst)
+        // {
+        //     std::cout << stats.date.year << "-" << stats.date.month << "-" << stats.date.day << ": ";
+        //     std::cout << stats.total_sailings << " sailings (" << stats.late_sailings << " late)" << std::endl;
+        // }
     }
     else
     {
