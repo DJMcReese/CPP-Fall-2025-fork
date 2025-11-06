@@ -478,17 +478,28 @@ std::vector<DayStatistics> best_days(std::vector<Sailing> const &sailings)
 
     }
 
-    //continue
+    // lambda function to find the minimum of late/total sailing (best days to travel)
     auto less_best = []( const auto &e1, const auto &e2 )
     {
         return (static_cast<double>(e1.late_sailings)/static_cast<double>(e1.total_sailings) < 
                 static_cast<double>(e2.late_sailings)/static_cast<double>(e2.total_sailings));
     };
 
+    // apply the less_best lambda to bs
     auto min = std::min_element( std::begin(bs), std::end(bs), less_best );
+    double min_val = static_cast<double>(min->late_sailings)/static_cast<double>(min->total_sailings);
 
-    std::cout << std::distance( std::begin(bs), min ) << '\n';
+    // print out the min value of late/total
+    std::cout << "min = " << min_val << std::endl;
 
+    // erase all values in bs that do not match criteria of late/total
+    bs.erase(std::remove_if(bs.begin(), bs.end(), [min_val](auto e) {
+        return static_cast<double>(e.late_sailings)/static_cast<double>(e.total_sailings) > min_val;
+    }), bs.end());
+
+    // print matching values
+    // for (auto i: bs)
+    //     std::cout << static_cast<double>(i.late_sailings)/static_cast<double>(i.total_sailings) <<std::endl;
 
     return bs;
 }
@@ -665,13 +676,13 @@ int main(int argc, char **argv)
     {
         auto best{best_days(all_sailings)};
         auto worst{worst_days(all_sailings)};
-        std::cout << "Best days:" << std::endl;
-        for (auto stats : best)
-        {
-            std::cout << stats.date.year << "-" << stats.date.month << "-" << stats.date.day << ": ";
-            std::cout << stats.total_sailings << " sailings (" << stats.late_sailings << " late)" << std::endl;
-        }
-        std::cout << "Worst days:" << std::endl;
+        // std::cout << "Best days:" << std::endl;
+        // for (auto stats : best)
+        // {
+        //     std::cout << stats.date.year << "-" << stats.date.month << "-" << stats.date.day << ": ";
+        //     std::cout << stats.total_sailings << " sailings (" << stats.late_sailings << " late)" << std::endl;
+        // }
+        // std::cout << "Worst days:" << std::endl;
         // for (auto stats : worst)
         // {
         //     std::cout << stats.date.year << "-" << stats.date.month << "-" << stats.date.day << ": ";
