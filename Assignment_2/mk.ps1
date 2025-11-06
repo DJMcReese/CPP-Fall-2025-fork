@@ -1,6 +1,4 @@
 
-rm assignment_2
-
 #compile
 g++ assignment_2.cpp -o assignment_2
 
