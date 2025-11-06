@@ -371,8 +371,45 @@ std::vector<RouteStatistics> performance_by_route(std::vector<Sailing> const &sa
     std::cout << "performance_by_route()::" << std::endl << std::endl;
 
     std::vector<RouteStatistics> rs;
+
+    for (auto const &s : sailings)
+    {
+        auto it = std::find_if(rs.begin(), rs.end(), [&](RouteStatistics const &r) {return r.route_number == s.route_number; });
+
+        if (it == rs.end())
+        {
+            RouteStatistics r;
+            r.route_number = s.route_number;
+            r.total_sailings = 1;
+            r.late_sailings = (s.actual_duration >= s.expected_duration + 5) ? 1 : 0;
+            rs.push_back(r);
+        }
+        else
+        {
+            it->total_sailings++;
+            if(s.actual_duration >= s.expected_duration + 5)
+            {
+                it->late_sailings++;
+            }
+        }
+    }
+
     return rs;
 }
+// all sailings is a vector of all Sailing objects input_file
+// auto statistics{performance_by_route(all_sailings)};
+//         for (auto stats : statistics)
+//         {
+//             std::cout << "Route " << stats.route_number << ": " << stats.total_sailings << " sailings (" << stats.late_sailings << " late)" << std::endl;
+//         }
+
+// struct RouteStatistics
+// {
+//     int route_number{0};
+//     int total_sailings{0};
+//     int late_sailings{0};
+// };
+
 
 /* best_days(sailings)
    Recall that a sailing is considered "late" if
@@ -535,6 +572,9 @@ int main(int argc, char **argv)
     {
         std::cout << "Performance by route:" << std::endl;
         auto statistics{performance_by_route(all_sailings)};
+
+        std::cout << "Performance by route ended::" << std::endl;
+
         for (auto stats : statistics)
         {
             std::cout << "Route " << stats.route_number << ": " << stats.total_sailings << " sailings (" << stats.late_sailings << " late)" << std::endl;
