@@ -481,12 +481,11 @@ std::vector<DayStatistics> best_days(std::vector<Sailing> const &sailings)
     //continue
     auto less_best = []( const auto &e1, const auto &e2 )
     {
-        return (e1.late_sailings/e1.total_sailings < e2.late_sailings/e2.total_sailings);
+        return (static_cast<double>(e1.late_sailings)/static_cast<double>(e1.total_sailings) < 
+                static_cast<double>(e2.late_sailings)/static_cast<double>(e2.total_sailings));
     };
 
-    auto min = std::min_element( std::begin(bs),
-        std::end(bs),
-        less_best );
+    auto min = std::min_element( std::begin(bs), std::end(bs), less_best );
 
     std::cout << std::distance( std::begin(bs), min ) << '\n';
 
