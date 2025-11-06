@@ -439,10 +439,55 @@ std::vector<DayStatistics> best_days(std::vector<Sailing> const &sailings)
     /* Your Code Here */
     std::cout << "best_days()::" << std::endl << std::endl;
 
-    std::vector<DayStatistics> ds;
+    std::vector<DayStatistics> bs;
 
-    return ds;
+    //ds = {sailings[0].departure_date, 0, 0}
+
+    for (auto const &s : sailings)
+    {
+        std::cout << "for::" << std::endl;
+
+        auto it = std::find_if(bs.begin(), bs.end(), [&](DayStatistics const &d) 
+                                {return d.date.year  == s.departure_date.year &&
+                                        d.date.month == s.departure_date.month &&
+                                        d.date.day   == s.departure_date.day;
+                                });
+
+        std::cout << "it::" << std::endl;
+
+        if (it == bs.end())
+        {
+            std::cout << "if::" << std::endl;
+
+            DayStatistics new_day;
+            new_day.date = s.departure_date;
+            new_day.total_sailings = 1;
+            new_day.late_sailings = (s.actual_duration >= s.expected_duration + 5) ? 1 : 0;
+            bs.push_back(new_day);
+            
+        } else
+        {
+            std::cout << "for::" << std::endl;
+            it->total_sailings++;
+            if (s.actual_duration >= s.expected_duration + 5) 
+            {
+                ++it->late_sailings;
+            }
+        }
+        if (bs.empty()) return {};
+
+        
+
+    }
+    return bs;
 }
+
+// struct DayStatistics
+// {
+//     Date date{};
+//     int total_sailings{0};
+//     int late_sailings{0};
+// };
 
 
 /* worst_days(sailings)
@@ -470,6 +515,31 @@ std::vector<DayStatistics> worst_days(std::vector<Sailing> const &sailings)
     std::cout << "worst_days()::" << std::endl;
 
     std::vector<DayStatistics> ws;
+
+        for (auto const &s : sailings)
+    {
+        auto it = std::find_if(ws.begin(), ws.end(), [&](DayStatistics const &d) 
+                                {return d.date.year  == s.departure_date.year &&
+                                        d.date.month == s.departure_date.month &&
+                                        d.date.day   == s.departure_date.day;
+                                });
+
+        if (it == ws.end())
+        {
+            DayStatistics new_day;
+            new_day.date = s.departure_date;
+            new_day.total_sailings = 1;
+            new_day.late_sailings = (s.actual_duration >= s.expected_duration + 5) ? 1 : 0;
+            ws.push_back(new_day);
+        } else
+        {
+            it->total_sailings++;
+            if (s.actual_duration >= s.expected_duration + 5) 
+            {
+                ++it->late_sailings;
+            }
+        }
+    }
 
     return ws;
 }
