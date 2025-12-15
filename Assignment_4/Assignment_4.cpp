@@ -4,6 +4,7 @@
 #include <sstream>  
 #include <vector>
 
+namespace Assignment4 {
 
 // ## Exercise 1 (10 points)
 
@@ -81,8 +82,5 @@ class GeometricObject {
 // To check containment inside a circle, you must check if `||p - c||<r` where `p` is the query point, `c` is the center, and `r` is the radius.
 
 // To check containment inside a rectangle, you need to check whether the query point `p` x and y coordinates are within the rectangle's lower and upper bounds.
-
-int main()
-{
 
 }
