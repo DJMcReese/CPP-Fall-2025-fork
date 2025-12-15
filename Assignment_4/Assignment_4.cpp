@@ -41,9 +41,16 @@ class Point2d {
         //     return *this;
         // };
 
+
+
         double norm() 
         {
             return sqrt(x*x - y*y);
+        }
+
+        friend std::ostream& operator<< (std::ostream& stream , const Point2d& point) {
+            stream << "(" << point.x << "," << point.y << ")" << std::endl;
+            return stream;
         }
 
     private:
@@ -69,7 +76,7 @@ class GeometricObject {
         Point2d get_center() const { return center; }
         void set_center(Point2d pos) { center = pos; }
 
-        double get_perimeter(){}
+        // double get_perimeter(){};
     
     private:
         Point2d center; 
@@ -88,7 +95,9 @@ int main () {
 
     Point2d c = a+b;
 
-    // std::cout << c;
+    std::cout << "Point c created by adding a and b: " << std::endl;
+
+    std::cout << c;
 
 
     return 0;
