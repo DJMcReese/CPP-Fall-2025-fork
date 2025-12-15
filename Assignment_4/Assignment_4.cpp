@@ -99,6 +99,10 @@ int main () {
 
     std::cout << c;
 
+    double a0 = a[0];
+    double a1 = a[1];
+
+    std::cout << "a [] = " << a0 << ", " << a1 << std::endl;
 
     return 0;
 }
