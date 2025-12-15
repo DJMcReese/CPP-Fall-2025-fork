@@ -22,10 +22,25 @@ class Point2d {
         Point2d() : x{0}, y{0} {}
         Point2d(double x_cord, double y_cord) : x{x_cord}, y{y_cord} {} 
 
-        Point2d& operator-();
-        Point2d& operator+();
-        Point2d& operator[]();
-        Point2d& operator==();
+        Point2d& operator-(const Point2d& rhs) 
+        {
+            x = x-rhs.x;
+            y = y - rhs.y;
+            return *this;
+
+        };
+        Point2d& operator+(const Point2d& rhs)
+        {
+            x = x +rhs.x;
+            y = y + rhs.y;
+            return *this;
+        };
+        double operator[](Point2d&){
+            return *this;
+        };
+        Point2d& operator==(){
+            return *this;
+        };
 
         double norm() 
         {
@@ -35,7 +50,7 @@ class Point2d {
     private:
         double x;
         double y;
-}
+};
 
 // Implement the `GeometricObject` class, it should provide:
 
@@ -47,6 +62,19 @@ class Point2d {
 // - A function `contains(p)` that checks if a `Point2d` is inside
 // - allows to be printed by `cout`
 // - `==` operator
+
+class GeometricObject {
+    public:
+        GeometricObject() : center(0,0) {}
+        GeometricObject(Point2d pos) : center(pos) {}
+        Point2d get_center() const { return center; }
+        void set_center(Point2d pos) { center = pos; }
+
+        double get_perimeter(){}
+    
+    private:
+        Point2d center; 
+};
 
 // Implement also 2 subclasses (add all necessary fields and functions): `Circle` and  `Rectangle`
 
