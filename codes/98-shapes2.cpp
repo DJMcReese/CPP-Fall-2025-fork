@@ -55,18 +55,9 @@ public:
         return name;
     }
 
-    virtual double get_area() const
-    {
-        return 0;
-    }
-    virtual double get_height() const
-    {
-        return 0;
-    }
-    virtual double get_width() const
-    {
-        return 0;
-    }
+    virtual double get_area() const = 0;
+    virtual double get_height() const = 0;
+    virtual double get_width() const = 0;
 
 protected:
     std::string name;
@@ -160,6 +151,13 @@ private:
     Point center;
 };
 
+class Triangle : public Shape
+{
+public:
+    Triangle(double base_length, double height)
+        : Shape{"Triangle"}, base, height
+
+        
 void print_shape(Shape &s)
 {
     std::cout << "Shape (" << s.get_name() << "):";
@@ -188,7 +186,7 @@ int main()
     //Task: Make the following line generate a compile error
     //      (since the generic Shape type is not considered "complete"
     //       enough to construct on its own)
-    Shape S{};
+    // Shape S{};
 
     return 0;
 }

@@ -84,6 +84,15 @@ public:
     //        2 Assuming the charge succeeded (i.e. did not throw an exception),
     //          award one point per dollar spent (rounding down in fractional cases).
 
+    void charge(double amount) override
+    {
+        //part 1
+
+        CreditCard::charge(amount); //call base class charge
+
+        points+=(int)amount; //point 2
+    }
+
     void redeem_points()
     {
         //Redeem 1000 points for 10 dollars against the balance.

@@ -81,7 +81,8 @@ private:
     }
 
 public:
-    Rectangle(double x0, double y0, double x1, double y1) : lower_left{x0, y0}, upper_right{x1, y1}
+    Rectangle(double x0, double y0, double x1, double y1)
+    : Shape{"Rectangle"}, lower_left{x0, y0}, upper_right{x1, y1}
     {
         std::cout << "Rectangle constructor 2" << std::endl;
         name = "Rectangle";
@@ -113,7 +114,8 @@ private:
 class Square : public Rectangle
 {
 public:
-    Square(double x0, double y0, double side_length) : Rectangle{x0, y0, x0 + side_length, y0 + side_length}
+    Square(double x0, double y0, double side_length) 
+        : Rectangle{x0, y0, x0 + side_length, y0 + side_length}
     {
         name = "Square";
     }

@@ -7,20 +7,21 @@
 #include <string>
 #include <vector>
 
-int second_to_last(std::vector<int> const &V)
+template<typename T>
+T second_to_last(std::vector<T> const &V)
 {
     if (V.size() < 2)
         throw std::runtime_error("Vector does not contain 2 elements");
-    int element{V.at(V.size() - 2)};
+    T element{V.at(V.size() - 2)};
     return element;
 }
-float second_to_last(std::vector<float> const &V)
-{
-    if (V.size() < 2)
-        throw std::runtime_error("Vector does not contain 2 elements");
-    float element{V.at(V.size() - 2)};
-    return element;
-}
+// float second_to_last(std::vector<float> const &V)
+// {
+//     if (V.size() < 2)
+//         throw std::runtime_error("Vector does not contain 2 elements");
+//     float element{V.at(V.size() - 2)};
+//     return element;
+// }
 
 int main()
 {
@@ -42,9 +43,9 @@ int main()
     std::cout << std::endl;
 
     // TO DO
-    // std::cout << "Second to last (V3): ";
-    // std::cout << second_to_last(V3);
-    // std::cout << std::endl;
+    std::cout << "Second to last (V3): ";
+    std::cout << second_to_last(V3);
+    std::cout << std::endl;
 
     return 0;
 }

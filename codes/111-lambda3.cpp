@@ -19,6 +19,11 @@ int main()
 
     int the_sum{0};
 
+    auto sum_items = [&the_sum, &V] (int x) {
+        the_sum += x;
+        std::cout << V.at(0) << std::endl;
+    };
+
     for_each(V, sum_items);
 
     std::cout << "The sum is " << the_sum << std::endl;

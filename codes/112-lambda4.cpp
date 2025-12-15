@@ -18,6 +18,21 @@ void for_each(std::vector<int> const &V, std::function<void(int)> element_functi
 bool search(std::vector<int> const &V, int element)
 {
     //Task write this function without any loops
+    bool found = false;
+
+    auto is_correct_element = [element, &found](int value)
+    {
+        bool is_correct = value == element;
+        if (is_correct)
+        {
+            found = true;
+        }
+
+    };
+
+    for_each(V, is_correct_element);
+
+    return found;
 }
 
 int main()
