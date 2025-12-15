@@ -4,8 +4,6 @@
 #include <sstream>  
 #include <vector>
 
-namespace Assignment4 {
-
 // ## Exercise 1 (10 points)
 
 // Implement the `Point2d` class that contains:
@@ -36,12 +34,12 @@ class Point2d {
             y = y + rhs.y;
             return *this;
         };
-        double operator[](Point2d&){
-            return *this;
-        };
-        Point2d& operator==(){
-            return *this;
-        };
+        // double operator[](Point2d&){
+        //     return *this;
+        // };
+        // Point2d& operator==(){
+        //     return *this;
+        // };
 
         double norm() 
         {
@@ -83,4 +81,15 @@ class GeometricObject {
 
 // To check containment inside a rectangle, you need to check whether the query point `p` x and y coordinates are within the rectangle's lower and upper bounds.
 
+int main () {
+
+    Point2d a(1,1);
+    Point2d b(2,2);
+
+    Point2d c = a+b;
+
+    // std::cout << c;
+
+
+    return 0;
 }
