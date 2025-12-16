@@ -205,29 +205,35 @@ class Rectangle : public GeometricObject {
 
 int main () {
 
+    // Point2d tests
+
     Point2d a(1,1);
     Point2d b(2,2);
 
-    Point2d c = a+b;
+    std::cout << "Point2d a: " << a << std::endl;
+    std::cout << "Point2d b: " << b << std::endl;
+    std::cout << "a + b: " << a + b << std::endl;
+    std::cout << "a - b: " << a - b << std::endl;
+    std::cout << "b - a: " << b - a << std::endl;
 
-    std::cout << "Point c created by adding a and b: " << std::endl;
-
-    std::cout << c;
-
+    // operator[] as getter
     double a0 = a[0];
     double a1 = a[1];
 
     std::cout << "a [] = " << a0 << ", " << a1 << std::endl;
 
+    // operator[] as setter
     a[0] = 5;
     a[1] = 6;
 
     std::cout << "After setting a [] = 5,6: " << a << std::endl;
 
+    // norm
     double solve = a.norm();
 
     std::cout << "Norm of a: " << solve << std::endl;
 
+    // operator==
     Point2d d(5,6);
 
     if (a == d) {
