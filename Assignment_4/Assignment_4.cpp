@@ -16,7 +16,8 @@
 // - allows to be printed by `cout`
 // - `==` operator
 
-class Point2d {
+class Point2d 
+{
     public:
         Point2d() : x{0}, y{0} {}
         Point2d(double x_cord, double y_cord) : x{x_cord}, y{y_cord} {} 
@@ -34,18 +35,45 @@ class Point2d {
             y = y + rhs.y;
             return *this;
         };
-        // double operator[](Point2d&){
-        //     return *this;
+        // double operator[](int index) const
+        // {
+
+        //     if(index == 0){
+        //        return x;
+        //     }
+        //     else if(index == 1){
+        //         return y;
+        //     }
+        
+        //     return -1;
+
+             
         // };
-        // Point2d& operator==(){
-        //     return *this;
-        // };
 
-
-
-        double norm() 
+        double& operator[](int index)
         {
-            return sqrt(x*x - y*y);
+
+            if(index == 0){
+               return x;
+            }
+            if(index == 1){
+                return y;
+            }
+        
+            return x;
+        };
+        
+
+    
+        bool operator==(Point2d const &rhs) const {
+            return(x == rhs.x && y == rhs.y);
+        };
+
+
+
+        double norm() const
+        {
+            return std::sqrt(x*x + y*y);
         }
 
         friend std::ostream& operator<< (std::ostream& stream , const Point2d& point) {
@@ -73,11 +101,20 @@ class GeometricObject {
     public:
         GeometricObject() : center(0,0) {}
         GeometricObject(Point2d pos) : center(pos) {}
-        Point2d get_center() const { return center; }
-        void set_center(Point2d pos) { center = pos; }
 
-        // double get_perimeter(){};
+
+        Point2d get_center() const { return center; };
+        void set_center(Point2d pos) { center = pos; };
+
+        double get_perimeter()
+        {
+            return 0.0;
+        };
     
+        bool contains(Point2d point) const {
+            return false;
+        };
+        
     private:
         Point2d center; 
 };
@@ -87,6 +124,84 @@ class GeometricObject {
 // To check containment inside a circle, you must check if `||p - c||<r` where `p` is the query point, `c` is the center, and `r` is the radius.
 
 // To check containment inside a rectangle, you need to check whether the query point `p` x and y coordinates are within the rectangle's lower and upper bounds.
+
+class Circle : public GeometricObject {
+    public:
+        Circle() : radius{1}, center{0,0} {};
+        Circle(Point2d pos, double rad) : radius{rad}, center{pos} {};
+        
+        double get_radius ()  
+        {
+            return radius;
+        };
+        void set_radius (double rad)
+        {
+            radius = rad;
+        };
+        Point2d get_center ()  
+        {
+            return center;
+        };
+        void set_center(Point2d pos) 
+        {
+            center = pos;
+        };
+
+        double get_perimeter() const 
+        {
+            return 2 * M_PI * radius;
+        };
+
+        bool contains(Point2d point) 
+        {
+            Point2d diff = point - center; //do i need an overload for - operator here?
+            return diff.norm() < radius;
+        };
+
+    private:
+        double radius;
+        Point2d center;
+};
+
+class Rectangle : public GeometricObject {
+    public:
+        Rectangle() : lower_left{0,0}, upper_right{1,1} {};
+        Rectangle(Point2d lower_pos, Point2d upper_pos) : lower_left{lower_pos}, upper_right{upper_pos} {};
+        
+        double get_width()
+        {
+            return upper_right[0] - lower_left[0];
+        }
+        double get_height()
+        {
+            return upper_right[1] - lower_left[1];
+        }
+
+        void set_lower_left(Point2d pos)
+        {
+            lower_left = pos;
+        }
+
+        void set_upper_right(Point2d pos)
+        {
+            upper_right = pos;
+        }
+
+        double get_perimeter() 
+        {
+            return 2 * (get_width() + get_height());
+        };
+
+        bool contains(Point2d point) 
+        {
+            return (point[0] >= lower_left[0] && point[0] <= upper_right[0] &&
+                    point[1] >= lower_left[1] && point[1] <= upper_right[1]);
+        };
+
+    private:
+        Point2d lower_left;
+        Point2d upper_right;
+};
 
 int main () {
 
@@ -103,6 +218,23 @@ int main () {
     double a1 = a[1];
 
     std::cout << "a [] = " << a0 << ", " << a1 << std::endl;
+
+    a[0] = 5;
+    a[1] = 6;
+
+    std::cout << "After setting a [] = 5,6: " << a << std::endl;
+
+    double solve = a.norm();
+
+    std::cout << "Norm of a: " << solve << std::endl;
+
+    Point2d d(5,6);
+
+    if (a == d) {
+        std::cout << "a and d are equal" << std::endl;
+    } else {
+        std::cout << "a and d are NOT equal" << std::endl;
+    }
 
     return 0;
 }
