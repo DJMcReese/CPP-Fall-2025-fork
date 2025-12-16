@@ -242,5 +242,13 @@ int main () {
         std::cout << "a and d are NOT equal" << std::endl;
     }
 
+    // GeometricObject
+
+    GeometricObject go1;
+    GeometricObject go2(d);
+
+    std::cout << "GeometricObject go2:" << go2 << std::endl;
+
+
     return 0;
 }
